@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="460" height="258" viewBox="0 0 460 258" role="img" aria-labelledby="title desc">
+  <title id="title">Side view of the cover on the sink ledge</title>
+  <desc id="desc">Stone and mesh share a level top. A narrow foot under the cover rests on the half-inch-wide steel ledge, five eighths of an inch below the counter. The steel curves down into the bowl on the right.</desc>
+  <defs>
+    <linearGradient id="paper" x2="0.8" y2="1">
+      <stop stop-color="#fcfbf7"/><stop offset="1" stop-color="#edf3f4"/>
+    </linearGradient>
+    <linearGradient id="stone" x2="1" y2="0.85">
+      <stop stop-color="#e9d3b1"/><stop offset="1" stop-color="#c4a57e"/>
+    </linearGradient>
+    <linearGradient id="graphite" x2="0.2" y2="1">
+      <stop stop-color="#53616b"/><stop offset="1" stop-color="#303e47"/>
+    </linearGradient>
+    <linearGradient id="metal" x2="0.25" y2="1">
+      <stop stop-color="#dce9eb"/><stop offset=".48" stop-color="#b3c7cf"/><stop offset="1" stop-color="#7893a0"/>
+    </linearGradient>
+    <pattern id="grains" width="31" height="27" patternUnits="userSpaceOnUse">
+      <path fill="#806749" opacity=".34" d="m4 5 2.1-.8 1.1 1.2-2.2.7Zm16 12 2.8-.5 1.1 1-3.2.7Z"/>
+      <path fill="#fff7e7" opacity=".57" d="m12 11 2-1.6 2.5.4-1.8 2.1Zm13 13 1.5-1 2.3.2-1.7 1.3Z"/>
+    </pattern>
+    <pattern id="cut" width="7" height="7" patternUnits="userSpaceOnUse">
+      <path d="m-1 1 2-2m-2 9 9-9m-2 9 2-2" fill="none" stroke="#ccdade" stroke-width=".7" opacity=".16"/>
+    </pattern>
+    <path id="slab" d="M76 88 H165.5 Q167 88 167 89.5 V183.25 H76 L79 161 74 143 79 124 75 109Z"/>
+    <path id="cover" d="M180.5 88 H277 Q279 88 279 90 V116 Q279 118 277 118 H251 V122.5 Q251 124 249.5 124 H218 V182 Q218 183.25 216.75 183.25 H192.25 Q191 183.25 191 182 V124 H180.5 Q179 124 179 122.5 V89.5 Q179 88 180.5 88Z"/>
+    <path id="web" d="M405 88h27q1.5 0 1.5 1.5v27q0 1.5-1.5 1.5h-27q-1.5 0-1.5-1.5v-27q0-1.5 1.5-1.5Z"/>
+  </defs>
+  <rect width="460" height="258" rx="10" fill="url(#paper)"/>
+  <!-- Normal section. All primary dimensions use six drawing units per millimeter. -->
+  <!-- A shallow view of the top behind the cut connects the mesh ribs. -->
+  <path d="M76 88 99 65H190L167 88Z" fill="#ebd9bb" stroke="#a78f70" stroke-width="1.1"/>
+  <path d="M77 87 99 66h89l-21 21Z" fill="url(#grains)" opacity=".75"/>
+  <path d="M279 88 304 72v30l-25 16Z" fill="#697980" stroke="#43535c" stroke-width="1"/>
+  <path d="M304 72h110v30H304Z" fill="#76848a" stroke="#53626b" stroke-width="1"/>
+  <path d="m414 72-10.5 16v30l10.5-16Z" fill="#495b65" stroke="#3d4d56" stroke-width="1"/>
+  <path d="M179 88h100l25-16h110l-10.5 16h30l23-23H202Z" fill="#708087" stroke="#43535c" stroke-linejoin="round" stroke-width="1.2"/>
+  <path d="m434 88 22.5-23v29.5L434 118Z" fill="#45555e" stroke="#35444d" stroke-width="1"/>
+  <path d="M202.5 66h249" stroke="#9ba8ab" stroke-width="1"/>
+  <g stroke="#826f59" stroke-width="1.2" stroke-linejoin="round">
+    <use href="#slab" fill="url(#stone)"/>
+    <use href="#slab" fill="url(#grains)" stroke="none"/>
+  </g>
+  <path d="M79 90h85" stroke="#fff4da" stroke-width="2"/>
+  <!-- Steel shelf and the start of the bowl. The flat ends at x=243.2. -->
+  <path d="M76 183.25 H243.2 C255 183.25 259 192 260.5 204
+           C263.2 225 267.5 239 280 253 L274 257 C260 241 256 225 253.4 205
+           C252.2 195.5 249 190.45 243.2 190.45 H76Z"
+        fill="url(#metal)" stroke="#607b87" stroke-width="1.3" stroke-linejoin="round"/>
+  <path d="M79 184.5h108m34 0h21c10 0 14 6 16 16" fill="none" stroke="#f5faf9" stroke-width="1.8"/>
+  <g fill="url(#graphite)" stroke="#24333c" stroke-width="1.3" stroke-linejoin="round">
+    <use href="#cover"/><use href="#web"/>
+  </g>
+  <g fill="url(#cut)"><use href="#cover"/><use href="#web"/></g>
+  <path d="M181 89.5h95m130 0h24" stroke="#b9c5c9" stroke-width="1.25"/>
+</svg>

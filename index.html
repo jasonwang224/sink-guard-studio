@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore the honeycomb cover fitted to your sink opening and its measured 5/8-inch steel shelf drop. Rotate the design or download the model.">
+  <meta name="theme-color" content="#eaf1f5"><title>Sink Guard Studio</title>
+  <link rel="stylesheet" href="style.css?v=cutaway-lift1">
+  <script defer src="cutaway-lift.js"></script>
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="#" aria-label="Sink Guard Studio home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 31 10.5v15L18 33 5 25.5v-15Z M18 12l5.2 3v6L18 24l-5.2-3v-6Z"/></svg><span>Sink Guard<span class="brand-sub">Studio</span></span></a><span class="version">Paper-tested outline</span></header>
+  <main>
+    <section class="workbench" aria-label="Sink cover design explorer">
+      <div class="intro">
+        <h1>A little peace<br>at the sink.</h1>
+        <p class="lead">A removable honeycomb cover follows the curves of your sink. Its rim stands on the steel shelf so the mesh sits level with the stone.</p>
+        <div class="size"><strong>5/8<span>inch</span></strong><span>Shelf to countertop · 15.875 mm</span></div>
+        <p class="prototype-note"><span class="note-mark">i</span><span>Paper fit confirmed<br><small>Your paper template follows the stone opening. The flat steel ledge measures ½ inch across.</small></span></p>
+        <a class="file-link" href="assets/sink-cover-prototype.zip?v=fitted1" download>Download model package <span aria-hidden="true">↧</span></a>
+      </div>
+      <div class="stage" id="stage">
+        <div class="stage-heading"><span>Explore the fit</span><div class="stage-actions"><button type="button" id="cover-toggle" aria-controls="viewport">Hide cover</button><button id="fullscreen" class="icon-button" title="Expand viewer" aria-label="Expand viewer">⛶</button></div></div>
+        <div id="viewport" tabindex="0" role="img" aria-label="Interactive 3D sink cover. Drag to rotate, scroll to zoom, right-drag to pan. Arrow keys rotate; plus and minus zoom."><canvas id="canvas"></canvas><img id="still" hidden alt=""><div id="loading" role="status"><span class="loader"></span><span id="load-message">Opening your model…</span></div><div id="measure-labels" aria-hidden="true"><span id="width-label">Cover width</span><span id="depth-label">Cover depth</span></div></div>
+        <div class="view-tools" role="group" aria-label="Camera view"><button class="selected" data-view="perspective" aria-pressed="true">Perspective</button><button data-view="top" aria-pressed="false">Top</button><button data-view="underside" aria-pressed="false">Underside</button><button data-view="edge" aria-pressed="false">Edge</button></div>
+        <div class="stage-bottom"><p id="viewer-help">Drag to orbit <span>·</span> Scroll to zoom <span>·</span> Right-drag to pan</p><button id="reset" class="text-button">Reset view ↺</button></div>
+      </div>
+    </section>
+    <section class="control-strip" aria-label="Model display controls">
+      <div class="finish-controls"><span class="control-label">Preview finish</span><div class="swatches" role="group" aria-label="Preview finish"><button class="swatch selected" style="--swatch:#545259" data-color="#545259" aria-label="Graphite finish" aria-pressed="true"></button><button class="swatch" style="--swatch:#84a59c" data-color="#84a59c" aria-label="Sage finish" aria-pressed="false"></button><button class="swatch" style="--swatch:#e1d9c9" data-color="#e1d9c9" aria-label="Linen finish" aria-pressed="false"></button></div><span id="finish-name">Graphite</span></div>
+      <div class="toggles"><label><input id="dimensions" type="checkbox"><span>Dimensions</span></label><label><input id="wireframe" type="checkbox"><span>Wireframe</span></label><label><input id="setting" type="checkbox" checked><span>Sink setting</span></label><button id="spin" aria-pressed="false"><span aria-hidden="true">⟳</span> Auto rotate</button></div>
+    </section>
+    <section class="details">
+      <div class="specifications">
+        <h2>The fitted cover</h2>
+        <p>The broad curves at the faucet side and the tighter front corners follow the outline you checked on paper.</p>
+        <dl>
+          <div><dt>Opening width at center</dt><dd>22 1/16 in</dd></div>
+          <div><dt>Opening depth at center</dt><dd>19 1/2 in</dd></div>
+          <div><dt>Gap to stone</dt><dd>2 mm per side, provisional</dd></div>
+          <div><dt>Clear hex opening</dt><dd>33.5 mm across flats</dd></div>
+          <div><dt>Mesh depth / web width</dt><dd>5 mm / 4.5 mm</dd></div>
+          <div><dt>Frame width / height</dt><dd>12 mm / 6 mm</dd></div>
+          <div><dt>Support below frame</dt><dd>9.875 mm tall × 4.5 mm wide</dd></div>
+          <div><dt>Shelf to countertop</dt><dd>5/8 in · 15.875 mm</dd></div>
+          <div><dt>Proposed material</dt><dd>PETG</dd></div>
+        </dl>
+      </div>
+      <div class="next-fit" id="shelf-fit">
+        <div class="cutaway-switcher">
+          <div class="cutaway-toolbar">
+            <h2>Where the cover sits</h2>
+            <div class="cutaway-controls">
+              <button type="button" class="cutaway-lift" id="cutaway-lift" aria-controls="cutaway-figure-3d" hidden><span class="cutaway-play-icon" aria-hidden="true"></span><span class="cutaway-lift-text">Lift cover</span></button>
+              <fieldset class="cutaway-choices">
+                <legend class="sr-only">Cutaway view</legend>
+                <label><input type="radio" id="cutaway-3d" name="cutaway-view" value="3d" aria-controls="cutaway-figure-3d" checked><span>3D</span></label>
+                <label><input type="radio" id="cutaway-2d" name="cutaway-view" value="2d" aria-controls="cutaway-figure-2d"><span>2D</span></label>
+              </fieldset>
+              <label class="cutaway-label-toggle"><input id="cutaway-labels" type="checkbox" role="switch" aria-controls="cutaway-marks-3d cutaway-marks-2d" checked><span class="cutaway-track" aria-hidden="true"></span>Labels</label>
+            </div>
+          </div>
+          <figure class="shelf-detail" id="cutaway-figure-3d">
+            <div class="cutaway-art">
+              <img src="assets/shelf-fit-3d.png" width="1440" height="896" alt="3D cutaway of the mesh cover and its foot resting on the steel ledge beneath the stone countertop.">
+              <video id="cutaway-motion" class="cutaway-layer" width="1440" height="896" preload="none" muted playsinline aria-hidden="true" src="assets/shelf-lift.mp4"></video>
+              <img id="cutaway-raised" class="cutaway-layer" width="1440" height="896" data-src="assets/shelf-lift-raised.webp" alt="The mesh and support foot lifted clear of the steel ledge.">
+              <img class="cutaway-annotations" id="cutaway-marks-3d" src="assets/shelf-fit-3d-labels.svg" width="1440" height="896" alt="Labels mark the stone counter, mesh cover, support foot and steel ledge. The ½-inch ledge width runs across the steel from the stone edge to the bowl bend. The ⅝-inch drop runs straight down from the countertop to the top of the steel.">
+            </div>
+            <figcaption><span class="with-cutaway-labels">The dotted line extends the stone edge through the cutaway. Measure the ledge from that edge to where the steel starts to bend into the bowl.</span><span class="without-cutaway-labels">The stone is cut back here to show the foot resting on the flat steel ledge.</span><span class="cutaway-motion-caption">The mesh and its support foot lift together. The steel ledge stays in place.</span></figcaption>
+          </figure>
+          <p class="cutaway-status" role="status"></p>
+          <figure class="shelf-detail" id="cutaway-figure-2d">
+            <div class="cutaway-art">
+              <img src="assets/shelf-fit-section-plain.svg" width="460" height="258" alt="Side cutaway showing the countertop, the mesh frame and its foot resting on the steel shelf.">
+              <img class="cutaway-annotations" id="cutaway-marks-2d" src="assets/shelf-fit-section-labels.svg" width="460" height="258" alt="The ½-inch width runs across the steel ledge. The ⅝-inch drop runs from the countertop surface to the top of the ledge. Labels identify the stone, mesh and support foot.">
+            </div>
+            <figcaption>Seen from the side, the mesh and stone share a level top. The foot supports the cover on the flat steel below.</figcaption>
+          </figure>
+        </div>
+        <p>With the cover centered, the foot reaches 8.5 mm in from the stone. That leaves 4.2 mm of flat steel before the ledge curves into the bowl. Lift the cover straight up to remove it.</p>
+        <a class="coupon-link" href="assets/sink-shelf-depth-measurement-guide.png?v=fitted1">View the shelf-height measurement guide</a>
+        <div class="fit-note"><strong>Before printing the full cover</strong><p>The 33.5 mm openings may admit a paw. Check the opening size, shelf contact and strength before letting your cat use the sink area. The cover master is a single piece.</p></div>
+      </div>
+    </section>
+    <section class="downloads">
+      <div><h2>Your design files</h2><p>The cover model includes the support rim. The separate sink scene shows how the cover sits in the opening.</p></div>
+      <div class="download-links">
+        <a href="assets/sink-cover-prototype.blend?v=fitted1" download>Blender source <span>.blend</span></a>
+        <a href="assets/sink-cover-master-mm.stl?v=fitted1" download>Cover master <span>.stl · mm</span></a>
+        <a href="assets/sink-cover.glb?v=fitted1" download>3D cover <span>.glb</span></a>
+        <a href="assets/sink-setting.glb?v=fitted1" download>Sink and steel shelf <span>.glb</span></a>
+        <a href="assets/estimated-sink-opening-top-edge.svg?v=fitted1" download>Paper-tested stone outline <span>.svg · mm</span></a>
+      </div>
+    </section>
+  </main>
+  <footer><span>Sink Guard Studio</span><span>Fitted sink cover</span></footer>
+  <div id="announcement" class="sr-only" aria-live="polite"></div>
+  <script type="module" src="app.js?v=fitted1"></script>
+</body>
+</html>

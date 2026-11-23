@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="896" viewBox="0 0 720 448" role="img" aria-labelledby="title desc">
+<title id="title">Labeled 3D cutaway of the sink cover on the steel ledge</title>
+<desc id="desc">The flat steel ledge is half an inch wide, from the stone edge to the start of the bend into the bowl. The five-eighths-inch vertical drop runs from the countertop surface down to the top of the flat steel. The dotted line extends the stone edge through the cutaway. Leaders identify the stone counter, mesh cover, support foot, and steel ledge.</desc>
+<defs>
+  <marker id="tip" markerWidth="8" markerHeight="8" refX="7.5" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0 .6 7.5 4 0 7.4Z" fill="#00636b"/></marker>
+  <path id="extension" d="M322.57 225.71H276 M322.57 293.01H276 M387.5 321.94l20 42 M429.48 301.97l20 42"/>
+  <path id="dims" d="M283 225.71V293.01 M405.5 359.94l41.98-19.97"/>
+  <path id="parts" d="M196 180H203L211 220 M391 93H329L279.98 180.64 M499 246H457L408.79 289.6 M171 386H256L373.81 321.97"/>
+  <style>
+    text{font:600 22px 'Segoe UI',Arial,sans-serif;fill:#193a4a}
+    .plate{fill:#fffffc;fill-opacity:.96;stroke:#bdc9cc;stroke-width:1}
+    .part-box{height:36px;rx:8px}
+    .part-label{dominant-baseline:middle}
+    .dimension{fill:#f6fffd;dominant-baseline:middle;font-size:24px;font-weight:700}
+    .dim-box{fill:#07565f;stroke:#fff;stroke-width:1.3;height:39px;rx:7px}
+    @media(max-width:430px){text{font-size:27px}.dimension{font-size:28px}}
+  </style>
+</defs>
+<!-- White casings preserve the legibility of leaders on both the mesh and steel. -->
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <use xlink:href="#parts" stroke="#fff" stroke-width="4.6" opacity=".88"/>
+  <use xlink:href="#parts" stroke="#304b57" stroke-width="1.8"/>
+</g>
+<g fill="#294650" stroke="#fff" stroke-width="1.6">
+  <circle cx="211" cy="220" r="3.6"/><circle cx="279.98" cy="180.64" r="3.6"/>
+  <circle cx="408.79" cy="289.6" r="3.6"/><circle cx="373.81" cy="321.97" r="3.6"/>
+</g>
+<!-- Witness lines use the actual top surface and the flat-to-curved transition. -->
+<g fill="none" stroke-linejoin="round">
+  <path d="M322.57 293.01l64.93 28.93" stroke="#fff" stroke-width="3.8" opacity=".7"/>
+  <path d="M322.57 293.01l64.93 28.93" stroke="#116b73" stroke-width="1.7" stroke-dasharray="4 4"/>
+  <use xlink:href="#extension" stroke="#fff" stroke-width="3.8"/>
+  <use xlink:href="#extension" stroke="#116b73" stroke-width="1.5"/>
+  <use xlink:href="#dims" stroke="#fff" stroke-width="5"/>
+  <g stroke="#00636b" stroke-width="2.4" marker-start="url(#tip)" marker-end="url(#tip)">
+    <path d="M283 225.71V293.01"/>
+    <path d="M405.5 359.94l41.98-19.97"/>
+  </g>
+  <path d="M283 260h-23 M426.49 349.95l19.5 28H461" stroke="#fff" stroke-width="4.2"/>
+  <path d="M283 260h-23 M426.49 349.95l19.5 28H461" stroke="#116b73" stroke-width="1.8"/>
+</g>
+<g fill="#00636b" stroke="#fff" stroke-width="1.4">
+  <circle cx="322.57" cy="225.71" r="3.0"/><circle cx="322.57" cy="293.01" r="3.0"/>
+  <circle cx="387.5" cy="321.94" r="3.0"/><circle cx="429.48" cy="301.97" r="3.0"/>
+</g>
+<g>
+  <rect class="plate part-box" x="17" y="162" width="181"/><text class="part-label" x="29" y="181">Stone counter</text>
+  <rect class="plate part-box" x="390" y="75" width="161"/><text class="part-label" x="402" y="94">Mesh cover</text>
+  <rect class="plate part-box" x="498" y="228" width="175"/><text class="part-label" x="510" y="247">Support foot</text>
+  <rect class="plate part-box" x="17" y="368" width="156"/><text class="part-label" x="29" y="387">Steel ledge</text>
+  <rect class="dim-box" x="112" y="240" width="150"/><text class="dimension" x="124" y="260">⅝ in drop</text>
+  <rect class="dim-box" x="458" y="358" width="236"/><text class="dimension" x="470" y="378">½ in ledge width</text>
+</g>
+</svg>
