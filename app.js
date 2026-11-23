@@ -20,7 +20,7 @@ function syncDisplay(){
   $('#cover-toggle').textContent=coverVisible?'Hide cover':'Show cover';
   viewport.setAttribute('aria-label',coverVisible?'3D sink cover, seated on the steel shelf. Drag to orbit.':'Uncovered sink and steel support shelf. Drag to orbit.');
   if(!$('#still').hidden){
-    $('#still').src=coverVisible?'assets/sink-cover-preview.png?v=fitted1':'assets/sink-shelf-uncovered.png?v=fitted1';
+    $('#still').src=coverVisible?'assets/sink-cover-preview.png?v=one-inch-v1':'assets/sink-shelf-uncovered.png?v=fitted1';
     $('#still').alt=coverVisible?'Cover level with the marble countertop':'Exposed steel shelf around the sink opening';
   }
 }
@@ -139,7 +139,7 @@ if(renderer){
     });
     scene.add(kitchen);syncDisplay();
   },undefined,stillPreview);
-  loader.load('assets/sink-cover.glb?v=fitted1',gltf=>{
+  loader.load('assets/sink-cover.glb?v=one-inch-v1',gltf=>{
     model=gltf.scene;scene.add(model);addCoverDimensions(model);
     model.traverse(o=>{if(!o.isMesh)return;o.castShadow=true;o.receiveShadow=true;o.material=o.material.clone();o.material.wireframe=$('#wireframe').checked;materials.push(o.material);});
     ready=true;$('#loading').classList.add('hidden');syncDisplay();resize();announce('Model loaded. Drag to explore.');
