@@ -28,6 +28,10 @@ export function createFallback(container) {
   let disposed = false;
   let width = 0;
   let height = 0;
+  let dpr = 1;
+  let panX = 0;
+  let panY = 0;
+  let drag;
   const atlas = new Image();
   const ready = new Promise((resolve, reject) => {
     atlas.onload = () => { loaded = true; paint(); resolve(); };
@@ -39,8 +43,8 @@ export function createFallback(container) {
     if (!loaded || disposed || !width || !height) return;
     ctx.clearRect(0, 0, width, height);
     const scale = Math.min(width / 0.81, height / 0.51);
-    const centreX = width / 2 + 0.014 * scale;
-    const centreY = height / 2 + 0.005 * scale;
+    const centreX = width / 2 + 0.014 * scale + panX * dpr;
+    const centreY = height / 2 + 0.005 * scale + panY * dpr;
 
     function drawSprite(name, pose) {
       const [ix, iy, iw, ih, ox, oy] = sprites[name];
@@ -74,7 +78,7 @@ export function createFallback(container) {
 
   function resize() {
     const rect = container.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
     width = Math.round(rect.width * dpr);
     height = Math.round(rect.height * dpr);
     if (canvas.width !== width) canvas.width = width;
@@ -82,11 +86,66 @@ export function createFallback(container) {
     paint();
   }
 
+  const listeners = new AbortController();
+  const options = {signal: listeners.signal};
+  const previousCursor = container.style.cursor;
+
+  function releaseDrag() {
+    if (!drag) return;
+    const id = drag.id;
+    drag = undefined;
+    container.style.cursor = previousCursor;
+    if (container.hasPointerCapture(id)) container.releasePointerCapture(id);
+  }
+
+  function reset() {
+    releaseDrag();
+    panX = panY = 0;
+    paint();
+  }
+
+  container.addEventListener('contextmenu', event => event.preventDefault(), options);
+  container.addEventListener('pointerdown', event => {
+    if (event.button !== 2 || drag) return;
+    event.preventDefault();
+    container.focus({preventScroll: true});
+    container.setPointerCapture(event.pointerId);
+    drag = {id: event.pointerId, x: event.clientX, y: event.clientY};
+    container.style.cursor = 'grabbing';
+  }, options);
+  container.addEventListener('pointermove', event => {
+    if (event.pointerId !== drag?.id) return;
+    if (!(event.buttons & 2)) { releaseDrag(); return; }
+    panX += event.clientX - drag.x;
+    panY += event.clientY - drag.y;
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+    paint();
+  }, options);
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+    container.addEventListener(type, event => {
+      if (event.pointerId === drag?.id) releaseDrag();
+    }, options);
+  }
+  const arrowPan = {ArrowLeft:[-32,0], ArrowRight:[32,0], ArrowUp:[0,-32], ArrowDown:[0,32]};
+  container.addEventListener('keydown', event => {
+    if (event.key === 'Home') {
+      event.preventDefault();
+      reset();
+    } else if (event.shiftKey && Object.hasOwn(arrowPan, event.key)) {
+      event.preventDefault();
+      const [dx, dy] = arrowPan[event.key];
+      panX += dx;
+      panY += dy;
+      paint();
+    }
+  }, options);
+
   resize();
   return {
     ready,
     draw(offsets) { poses = offsets || {}; paint(); },
-    resize,
-    dispose() { disposed = true; canvas.remove(); },
+    resize, reset,
+    dispose() { disposed = true; listeners.abort(); releaseDrag(); canvas.remove(); },
   };
 }

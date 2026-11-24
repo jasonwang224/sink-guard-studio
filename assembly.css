@@ -61,3 +61,13 @@
   .assembly-title { margin-bottom: 1rem; }
 }
 .glue-note { font-size: .94rem; padding: .8rem 0; border-top: 1px solid var(--line); } @media (min-width:521px) and (max-width:800px) { .glue-note { grid-column: 1/-1; grid-row: 3; } }
+
+.assembly-view-actions { display: flex; align-items: center; gap: .45rem; }
+#assembly-fullscreen { display: inline-flex; align-items: center; gap: .4rem; }
+#assembly-fullscreen svg { width: 1rem; height: 1rem; }
+.assembly-stage:fullscreen, .assembly-stage.expanded { width: 100%; height: 100%; max-width: none; max-height: none; border: 0; border-radius: 0; }
+.assembly-stage.expanded { position: fixed; inset: 0; z-index: 999; height: 100dvh; }
+body.assembly-expanded { overflow: hidden; }
+.assembly-stage:is(:fullscreen,.expanded) .stage-strip { padding-top: max(.7rem, env(safe-area-inset-top)); }
+.assembly-stage:is(:fullscreen,.expanded) .motion-controls { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+@media(max-width:450px) { .stage-strip button { font-size: .81rem; padding-inline: .45rem; } }

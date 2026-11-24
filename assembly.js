@@ -101,6 +101,8 @@ document.addEventListener('visibilitychange', () => {
 });
 reducedMotion.addEventListener('change', event => { if (event.matches) setPlaying(false); });
 
+function preventMenu(event) { event.preventDefault(); }
+
 async function createOrbitView() {
   const [THREE, {OrbitControls}, {GLTFLoader}] = await Promise.all([
     import('three'), import('three/addons/controls/OrbitControls.js'), import('three/addons/loaders/GLTFLoader.js')
@@ -112,10 +114,13 @@ async function createOrbitView() {
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, .01, 5);
   const scene = new THREE.Scene();
   const controls = new OrbitControls(camera, canvas);
-  controls.enablePan = false;
+  controls.enablePan = true;
+  controls.screenSpacePanning = true;
+  controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
   controls.minZoom = .65;
   controls.maxZoom = 5;
-  controls.target.set(0, .011, 0);
+  const homeTarget = new THREE.Vector3(0, .011, 0);
+  controls.target.copy(homeTarget);
   const cameraStart = new THREE.Vector3(.33, .83, 1.05);
   camera.position.copy(cameraStart).add(controls.target);
   controls.update();
@@ -159,6 +164,7 @@ async function createOrbitView() {
     render();
   }
   function reset() {
+    controls.target.copy(homeTarget);
     camera.zoom = 1;
     camera.position.copy(cameraStart).add(controls.target);
     camera.updateProjectionMatrix();
@@ -169,6 +175,17 @@ async function createOrbitView() {
     if (!['ArrowLeft','ArrowRight','ArrowDown','ArrowUp','+','=','-','Home'].includes(event.key)) return;
     event.preventDefault();
     if (event.key === 'Home') { reset(); return; }
+    if (event.shiftKey && event.key.startsWith('Arrow')) {
+      const dx = event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : 0;
+      const dy = event.key === 'ArrowUp' ? 1 : event.key === 'ArrowDown' ? -1 : 0;
+      const distance = (camera.top - camera.bottom) / (camera.zoom * 16);
+      const pan = new THREE.Vector3(dx, dy, 0).applyQuaternion(camera.quaternion).multiplyScalar(-distance);
+      controls.target.add(pan);
+      camera.position.add(pan);
+      controls.update();
+      render();
+      return;
+    }
     const orbit = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
     if (event.key === 'ArrowLeft') orbit.theta -= .15;
     if (event.key === 'ArrowRight') orbit.theta += .15;
@@ -182,11 +199,12 @@ async function createOrbitView() {
     render();
   }
   art.addEventListener('keydown', keydown);
+  art.addEventListener('contextmenu', preventMenu);
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); useFallback(); }, {once:true});
   resetButton.hidden = false;
   art.classList.add('is-orbit');
-  art.setAttribute('aria-label', 'Four colored sink cover pieces. Drag or use the arrow keys to rotate. Scroll or use plus and minus to zoom.');
-  help.textContent = 'Drag to rotate · Scroll to zoom · Move the slider to inspect the joints.';
+  art.setAttribute('aria-label', 'Four colored sink cover pieces. Drag to rotate and right-drag to pan. Arrow keys rotate, Shift plus arrow keys pan, and plus or minus zoom.');
+  help.textContent = 'Drag to rotate · Right-drag to pan · Scroll to zoom';
   return {
     reset, resize,
     draw(offsets) {
@@ -195,6 +213,7 @@ async function createOrbitView() {
     },
     dispose() {
       art.removeEventListener('keydown', keydown);
+      art.removeEventListener('contextmenu', preventMenu);
       controls.dispose();
       gltf.scene.traverse(node => { if (node.isMesh) { node.geometry.dispose(); node.material.dispose(); } });
       renderer.dispose();
@@ -212,12 +231,13 @@ async function useFallback() {
     art.replaceChildren();
     resetButton.hidden = true;
     art.classList.remove('is-orbit');
-    art.setAttribute('aria-label', 'Angled view of the four cover pieces. Use the buttons or slider to move the joints.');
-    help.textContent = 'Move the slider or choose a step to inspect the joints.';
-    const {createFallback} = await import('./assembly-fallback.js');
+    art.setAttribute('aria-label', 'Angled view of the cover. Right-drag or press Shift and the arrow keys to pan. Use the buttons or slider to move the joints.');
+    help.textContent = 'Right-drag to pan · Move the slider to inspect the joints.';
+    const {createFallback} = await import('./assembly-fallback.js?v=pan1');
     const fallback = createFallback(art);
     await fallback.ready;
     viewer = fallback;
+    resetButton.hidden = false;
     viewer.resize();
     showPosition();
   } finally {
@@ -230,6 +250,36 @@ async function useFallback() {
     }
   }
 }
+
+const stage = document.querySelector('.assembly-stage');
+const fullButton = document.querySelector('#assembly-fullscreen');
+
+function syncFullScreen() {
+  const expanded = document.fullscreenElement === stage || stage.classList.contains('expanded');
+  fullButton.setAttribute('aria-pressed', String(expanded));
+  fullButton.querySelector('span').textContent = expanded ? 'Exit full screen' : 'Full screen';
+  viewer?.resize();
+}
+function setExpanded(value) {
+  stage.classList.toggle('expanded', value);
+  document.body.classList.toggle('assembly-expanded', value);
+  syncFullScreen();
+}
+fullButton.addEventListener('click', async () => {
+  if (stage.classList.contains('expanded')) { setExpanded(false); return; }
+  if (document.fullscreenElement === stage) { await document.exitFullscreen(); return; }
+  if (stage.requestFullscreen && document.fullscreenEnabled) {
+    try { await stage.requestFullscreen(); return; } catch { /* A hosting frame may only allow in-page expansion. */ }
+  }
+  setExpanded(true);
+});
+document.addEventListener('fullscreenchange', syncFullScreen);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && stage.classList.contains('expanded')) {
+    setExpanded(false);
+    fullButton.focus();
+  }
+});
 
 async function initialize() {
   try {
