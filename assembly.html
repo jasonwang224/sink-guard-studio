@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eaf1f5">
+  <meta name="description" content="Watch the four printed quarters of the sink guard fit together at their overlapping glue joints.">
+  <title>Four-piece assembly · Sink Guard Studio</title>
+  <link rel="stylesheet" href="style.css?v=cutaway-lift1">
+  <link rel="stylesheet" href="assembly.css?v=1">
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Sink Guard Studio home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 31 10.5v15L18 33 5 25.5v-15Z M18 12l5.2 3v6L18 24l-5.2-3v-6Z"/></svg><span>Sink Guard<span class="brand-sub">Studio</span></span></a>
+    <nav class="studio-tabs" aria-label="Studio views"><a href="./">Cover explorer</a><a href="assembly.html" aria-current="page">Four-piece assembly</a></nav>
+    <span class="version">Paper-tested outline</span>
+  </header>
+  <main class="assembly-page">
+    <div class="assembly-title"><h1>Four-piece assembly</h1><p>Watch the stepped glue joints meet, then follow the four pieces as they pull apart.</p></div>
+    <div class="assembly-layout">
+      <section class="assembly-stage" aria-label="Interactive assembly animation">
+        <div class="stage-strip"><span class="pose-name" id="pose-name">Pieces apart</span><button type="button" id="reset-camera" hidden>Reset view</button></div>
+        <div class="assembly-art" id="assembly-art" role="img" tabindex="0" aria-label="Four colored sink cover pieces. Animation controlled by the buttons and slider below."></div>
+        <div id="assembly-loading" role="status">Loading the four pieces…</div>
+        <div class="motion-controls">
+          <button type="button" id="play-motion" disabled><span class="motion-icon" aria-hidden="true"></span><span id="play-label">Play</span></button>
+          <div class="travel"><label class="sr-only" for="assembly-travel">Assembly position</label><input type="range" id="assembly-travel" min="0" max="1000" step="1" value="0" disabled><div aria-hidden="true"><span>Apart</span><span>Together</span></div></div>
+        </div>
+      </section>
+      <aside class="assembly-guide">
+        <h2>How the pieces meet</h2>
+        <ol class="sequence">
+          <li><button type="button" data-stop="0" disabled><span class="step-no" aria-hidden="true">1</span><span><strong>Lay out the pieces</strong><small>The two broad curves face the faucet.</small></span></button></li>
+          <li><button type="button" data-stop="0.54" disabled><span class="step-no" aria-hidden="true">2</span><span><strong>Join each row</strong><small>The right piece sits on the lip of the left piece.</small></span></button></li>
+          <li><button type="button" data-stop="1" disabled><span class="step-no" aria-hidden="true">3</span><span><strong>Seat the back row</strong><small>Lower the faucet-side row onto the front row. The tops meet flush.</small></span></button></li>
+        </ol>
+        <p class="glue-note">Glue goes between the matching steps on the cut hexagon ribs and the outer rim.</p>
+        <div class="assembly-key"><h3>Piece colors</h3><ul>
+          <li><i style="--piece:#296e72"></i>Back left</li><li><i style="--piece:#679888"></i>Back right</li>
+          <li><i style="--piece:#365d80"></i>Front left</li><li><i style="--piece:#ab6749"></i>Front right</li>
+        </ul></div>
+      </aside>
+    </div>
+    <p class="assembly-help" id="assembly-help">Use the slider to inspect a joint at any point.</p>
+    <noscript><p>Enable JavaScript to play the assembly animation.</p></noscript>
+  </main>
+  <footer><span>Sink Guard Studio</span><span>Fitted sink cover</span></footer>
+  <script type="module" src="assembly.js?v=1"></script>
+</body>
+</html>
