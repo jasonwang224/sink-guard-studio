@@ -7,7 +7,7 @@
   <meta name="description" content="Watch the four printed quarters of the sink guard fit together at their overlapping glue joints.">
   <title>Four-piece assembly · Sink Guard Studio</title>
   <link rel="stylesheet" href="style.css?v=cutaway-lift1">
-  <link rel="stylesheet" href="assembly.css?v=pan-full1">
+  <link rel="stylesheet" href="assembly.css?v=glue1">
   <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
 </head>
 <body>
@@ -23,6 +23,10 @@
         <div class="stage-strip"><span class="pose-name" id="pose-name">Pieces apart</span><div class="assembly-view-actions"><button type="button" id="reset-camera" hidden>Reset view</button><button type="button" id="assembly-fullscreen" aria-pressed="false"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2 7V2h5m6 0h5v5m0 6v5h-5m-6 0H2v-5"/></svg><span>Full screen</span></button></div></div>
         <div class="assembly-art" id="assembly-art" role="img" tabindex="0" aria-label="Four colored sink cover pieces. Animation controlled by the buttons and slider below."></div>
         <div id="assembly-loading" role="status">Loading the four pieces…</div>
+        <div class="glue-bar">
+          <label class="glue-switch"><input type="checkbox" role="switch" id="glue-surfaces" aria-controls="assembly-art" aria-describedby="glue-instruction" disabled><span class="glue-track" aria-hidden="true"></span>Show glue surfaces</label>
+          <span class="glue-caption" id="glue-caption" role="status"></span>
+        </div>
         <div class="motion-controls">
           <button type="button" id="play-motion" disabled><span class="motion-icon" aria-hidden="true"></span><span id="play-label">Play</span></button>
           <div class="travel"><label class="sr-only" for="assembly-travel">Assembly position</label><input type="range" id="assembly-travel" min="0" max="1000" step="1" value="0" disabled><div aria-hidden="true"><span>Apart</span><span>Together</span></div></div>
@@ -35,7 +39,13 @@
           <li><button type="button" data-stop="0.54" disabled><span class="step-no" aria-hidden="true">2</span><span><strong>Join each row</strong><small>The right piece sits on the lip of the left piece.</small></span></button></li>
           <li><button type="button" data-stop="1" disabled><span class="step-no" aria-hidden="true">3</span><span><strong>Seat the back row</strong><small>Lower the faucet-side row onto the front row. The tops meet flush.</small></span></button></li>
         </ol>
-        <p class="glue-note">Glue goes between the matching steps on the cut hexagon ribs and the outer rim.</p>
+        <p class="glue-note" id="glue-instruction">Turn on <strong>Show glue surfaces</strong> to spread the pieces apart. Amber marks both faces of each joint on the cut ribs and outer rim. Follow the adhesive directions for which face to coat.</p>
+        <details class="glue-adhesive">
+          <summary>Adhesive for PA12 nylon</summary>
+          <p>Ask the print shop about <strong>Permabond TA4550</strong>, a two-part acrylic that the manufacturer recommends for nylon 12. Dry-fit the four pieces first. The adhesive cures fully in about 24 hours at 73°F (23°C).</p>
+          <p>Before your cat uses the cover, have the shop check the cured joints after wetting and test the cover on a ½-inch ledge for a 9 lb cat landing near the center.</p>
+          <p class="glue-sources"><a href="https://permabond.com/materials_bonded/how-to-bond-nylon/">Nylon bonding guide</a> · <a href="https://permabond.com/wp-content/uploads/2025/11/TA4550_TDS-1-2.pdf">Technical data sheet</a></p>
+        </details>
         <div class="assembly-key"><h3>Piece colors</h3><ul>
           <li><i style="--piece:#296e72"></i>Back left</li><li><i style="--piece:#679888"></i>Back right</li>
           <li><i style="--piece:#365d80"></i>Front left</li><li><i style="--piece:#ab6749"></i>Front right</li>
@@ -46,6 +56,6 @@
     <noscript><p>Enable JavaScript to play the assembly animation.</p></noscript>
   </main>
   <footer><span>Sink Guard Studio</span><span>Fitted sink cover</span></footer>
-  <script type="module" src="assembly.js?v=pan-full1"></script>
+  <script type="module" src="assembly.js?v=glue1"></script>
 </body>
 </html>

@@ -10,6 +10,16 @@ const sprites = {
 };
 const atlasPixelsPerMetre = 2700;
 const origin = {x: 0, y: 0, z: 0};
+// Cropped amber mask regions, with their offset inside each underlying sprite.
+const glueRegions = {
+  'back-left':   [0, 0, 941, 396, 0, 39],
+  'back-right':  [0, 398, 703, 162, 28, 386],
+  'front-left':  [705, 398, 728, 557, 115, 0],
+  'front-right': [0, 957, 695, 154, 246, 0],
+  'back-row':    [0, 1113, 1448, 546, 0, 39],
+  'front-row':   [0, 1661, 1445, 557, 115, 0],
+  'assembled':   [0, 2220, 1448, 800, 112, 39],
+};
 
 function joined(a, b) {
   return Math.abs(a.x - b.x) < 1e-7 && Math.abs(a.y - b.y) < 1e-7 && Math.abs(a.z - b.z) < 1e-7;
@@ -32,12 +42,32 @@ export function createFallback(container) {
   let panX = 0;
   let panY = 0;
   let drag;
+  let glueVisible = false;
+  let glueAtlas;
+  let glueLoad;
   const atlas = new Image();
   const ready = new Promise((resolve, reject) => {
     atlas.onload = () => { loaded = true; paint(); resolve(); };
     atlas.onerror = () => reject(new Error('The assembly artwork could not be loaded.'));
   });
   atlas.src = new URL('./assets/assembly-fallback.webp', import.meta.url).href;
+
+  function setGlueVisible(visible) {
+    glueVisible = Boolean(visible);
+    if (!glueVisible || glueAtlas) {
+      paint();
+      return Promise.resolve();
+    }
+    if (!glueLoad) {
+      const image = new Image();
+      glueLoad = new Promise((resolve, reject) => {
+        image.onload = () => { glueAtlas = image; paint(); resolve(); };
+        image.onerror = () => { glueLoad = undefined; reject(new Error('The glue surface artwork could not be loaded.')); };
+      });
+      image.src = new URL('./assets/assembly-glue-fallback.webp', import.meta.url).href;
+    }
+    return glueLoad;
+  }
 
   function paint() {
     if (!loaded || disposed || !width || !height) return;
@@ -53,7 +83,12 @@ export function createFallback(container) {
       const dy = 0.180524921 * pose.x - 0.798422378 * pose.y + 0.574397476 * pose.z;
       const px = centreX + (ox / atlasPixelsPerMetre + dx) * scale;
       const py = centreY + (oy / atlasPixelsPerMetre + dy) * scale;
-      ctx.drawImage(atlas, ix, iy, iw, ih, px, py, iw * scale / atlasPixelsPerMetre, ih * scale / atlasPixelsPerMetre);
+      const pxScale = scale / atlasPixelsPerMetre;
+      ctx.drawImage(atlas, ix, iy, iw, ih, px, py, iw * pxScale, ih * pxScale);
+      if (glueVisible && glueAtlas && glueRegions[name]) {
+        const [gx, gy, gw, gh, dx, dy] = glueRegions[name];
+        ctx.drawImage(glueAtlas, gx, gy, gw, gh, px + dx * pxScale, py + dy * pxScale, gw * pxScale, gh * pxScale);
+      }
     }
 
     const bl = poses['back-left'] || origin;
@@ -145,7 +180,7 @@ export function createFallback(container) {
   return {
     ready,
     draw(offsets) { poses = offsets || {}; paint(); },
-    resize, reset,
+    resize, reset, setGlueVisible,
     dispose() { disposed = true; listeners.abort(); releaseDrag(); canvas.remove(); },
   };
 }

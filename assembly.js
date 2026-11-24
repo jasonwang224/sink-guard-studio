@@ -2,6 +2,8 @@ const art = document.querySelector('#assembly-art');
 const playButton = document.querySelector('#play-motion');
 const playLabel = document.querySelector('#play-label');
 const positionInput = document.querySelector('#assembly-travel');
+const glueSwitch = document.querySelector('#glue-surfaces');
+const glueCaption = document.querySelector('#glue-caption');
 const poseName = document.querySelector('#pose-name');
 const status = document.querySelector('#assembly-loading');
 const resetButton = document.querySelector('#reset-camera');
@@ -90,6 +92,24 @@ function scrub(value) {
   showPosition();
 }
 
+let glueChange = 0;
+async function updateGlue() {
+  const request = ++glueChange;
+  const enabled = glueSwitch.checked;
+  glueCaption.textContent = enabled ? 'Loading glue surfaces…' : '';
+  try {
+    await viewer.setGlueVisible(enabled);
+    if (request === glueChange) glueCaption.textContent = enabled ? 'Amber marks the matching faces.' : '';
+  } catch {
+    if (request !== glueChange) return;
+    glueSwitch.checked = false;
+    glueCaption.textContent = 'Glue surfaces could not load. Try the switch again.';
+  }
+}
+glueSwitch.addEventListener('change', () => {
+  if (glueSwitch.checked) scrub(0);
+  updateGlue();
+});
 playButton.addEventListener('click', () => setPlaying(!playing));
 positionInput.addEventListener('input', () => scrub(Number(positionInput.value) / 1000));
 steps.forEach(button => button.addEventListener('click', () => scrub(Number(button.dataset.stop))));
@@ -148,6 +168,38 @@ async function createOrbitView() {
     throw error;
   }
   scene.add(gltf.scene);
+  let disposed = false;
+  let markGroups = [];
+  let markRequest;
+  let showMarks = false;
+  const markMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffb000, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -2
+  });
+  async function loadMarks() {
+    const marks = await new GLTFLoader().loadAsync('assets/assembly-glue-faces.glb');
+    const groups = pieces.map(name => marks.scene.getObjectByName(name));
+    if (groups.some(group => !group)) throw new Error('Incomplete glue model');
+    groups.forEach((group, index) => {
+      group.traverse(mesh => {
+        if (!mesh.isMesh) return;
+        mesh.material.dispose();
+        if (disposed) mesh.geometry.dispose();
+        else { mesh.material = markMaterial; mesh.renderOrder = 1; }
+      });
+      if (!disposed) nodes[index].add(group);
+    });
+    if (!disposed) markGroups = groups;
+  }
+  async function setGlueVisible(visible) {
+    showMarks = visible;
+    if (visible && !markGroups.length) {
+      markRequest ??= loadMarks().catch(error => { markRequest = undefined; throw error; });
+      await markRequest;
+    }
+    if (disposed) return;
+    markGroups.forEach(group => { group.visible = showMarks; });
+    render();
+  }
   art.replaceChildren(canvas);
   const render = () => renderer.render(scene, camera);
   controls.addEventListener('change', render);
@@ -206,12 +258,14 @@ async function createOrbitView() {
   art.setAttribute('aria-label', 'Four colored sink cover pieces. Drag to rotate and right-drag to pan. Arrow keys rotate, Shift plus arrow keys pan, and plus or minus zoom.');
   help.textContent = 'Drag to rotate · Right-drag to pan · Scroll to zoom';
   return {
-    reset, resize,
+    reset, resize, setGlueVisible,
     draw(offsets) {
       nodes.forEach((node, i) => { const offset = offsets[pieces[i]]; node.position.set(offset.x, offset.y, offset.z); });
       render();
     },
     dispose() {
+      disposed = true;
+      markMaterial.dispose();
       art.removeEventListener('keydown', keydown);
       art.removeEventListener('contextmenu', preventMenu);
       controls.dispose();
@@ -233,10 +287,11 @@ async function useFallback() {
     art.classList.remove('is-orbit');
     art.setAttribute('aria-label', 'Angled view of the cover. Right-drag or press Shift and the arrow keys to pan. Use the buttons or slider to move the joints.');
     help.textContent = 'Right-drag to pan · Move the slider to inspect the joints.';
-    const {createFallback} = await import('./assembly-fallback.js?v=pan1');
+    const {createFallback} = await import('./assembly-fallback.js?v=glue1');
     const fallback = createFallback(art);
     await fallback.ready;
     viewer = fallback;
+    if (glueSwitch.checked) await updateGlue();
     resetButton.hidden = false;
     viewer.resize();
     showPosition();
@@ -246,7 +301,7 @@ async function useFallback() {
       setPlaying(false);
       status.hidden = false;
       status.textContent = 'The assembly could not load. Refresh this page to try again.';
-      [playButton, positionInput, ...steps].forEach(control => control.disabled = true);
+      [playButton, positionInput, glueSwitch, ...steps].forEach(control => control.disabled = true);
     }
   }
 }
@@ -291,7 +346,7 @@ async function initialize() {
   viewer.resize();
   new ResizeObserver(() => { viewer?.resize(); viewer?.draw(offsetsAt(position)); }).observe(art);
   status.hidden = true;
-  [playButton, positionInput, ...steps].forEach(control => control.disabled = false);
+  [playButton, positionInput, glueSwitch, ...steps].forEach(control => control.disabled = false);
   showPosition();
   setPlaying(!reducedMotion.matches);
 }
